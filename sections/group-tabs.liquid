@@ -1,0 +1,217 @@
+{% if section.blocks.size > 0 %}
+    <section class="tabs-section">
+        <div class="tabs-section-bg"></div>
+        <div class="container">
+            <div class="tabs-nav">
+                {% for block in section.blocks %}
+                    {% assign tab_id = "tab-" | append: forloop.index %}
+                    <button class="tab-button {% if forloop.first %}active{% endif %}" data-tab="{{ tab_id }}" data-section-id="{{ block.settings.section_id | escape }}">
+                        {% if block.settings.tab_icon  != blank %}
+                            <div  class="tab-icon" style="mask-image: url('{{ block.settings.tab_icon | img_url: 'small' }}'); -webkit-mask-image: url('{{ block.settings.tab_icon | img_url: 'small' }}');"></div>
+                        {% endif %}
+                        <span>{{ block.settings.tab_title | escape }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+
+            <div class="tabs-content">
+                {% for block in section.blocks %}
+                    {% assign tab_id = "tab-" | append: forloop.index %}
+                    <div class="tab-panel {% if forloop.first %}active{% endif %}" id="{{ tab_id }}">
+                        <div class="tab-content">
+                            <p>Uploading...</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Tabs with Sections",
+  "settings": [
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "tab_icon",
+          "label": "Upload Icon Tab"
+        },
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Name of the tab",
+          "default": "Tab"
+        },
+        {
+          "type": "text",
+          "id": "section_id",
+          "label": "Unique ID of the section",
+          "info": "Enter the full unique ID of the section.",
+          "default": "template--25422536442205__product_tab_picker_rkLHxE"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabs with Sections",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+    .tabs-section {
+        padding: 30px 0 0;
+        position: relative;
+    }
+
+    .tabs-section-bg {
+        content: "";
+        display: block!important;
+        position: absolute;
+        top:50%;
+        left: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .tabs-nav {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 60px;
+        position: relative;
+    }
+    .tabs-nav:after {
+        position: absolute;
+        bottom: 1px;
+        left: 0;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: #BDC2C6;
+        z-index: -1;
+    }
+
+    .tab-button {
+        background: none;
+        border: none;
+        padding: 10px 64px;
+        font-size: 21px;
+        font-weight: 500;
+        color: #8C8C8C;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        @media all and (max-width: 414px) {
+            padding: 10px 42px;
+        }
+    }
+
+    div.tab-icon {
+        display: block;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        background-color: #8C8C8C;
+        width: 85px;
+        height: 60px;
+    }
+
+    .tab-button.active .tab-icon,
+    .tab-button:hover .tab-icon{
+        background-color: #0055B8;
+    }
+
+    .tab-button.active,
+    .tab-button:hover{
+        border-bottom: 4px solid #0055B8;
+        color: #0055B8;
+    }
+
+    .tab-button img {
+        width: 84px;
+        height: 60px;
+        object-fit: cover;
+    }
+
+    .tabs-content {
+        position: relative;
+    }
+
+    .tab-panel {
+        display: none;
+    }
+
+    .tab-panel.active {
+        display: block;
+    }
+
+    .tab-content {
+        line-height: 1.6;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                const sectionId = button.getAttribute('data-section-id');
+                const panel = document.getElementById(tabId);
+                panel.classList.add('active');
+
+                const tabContent = panel.querySelector('.tab-content');
+                if (sectionId) {
+                    try {
+                        const response = await fetch(`/?section_id=${sectionId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'text/html',
+                                'Accept': 'text/html'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Error section upload: ${response.statusText}`);
+                        }
+
+                        const html = await response.text();
+                        tabContent.innerHTML = html;
+                        tabContent.querySelector('.dynamic-products').classList.remove('hidden');
+                        let event = new CustomEvent("tab-content-loaded");
+                        document.dispatchEvent(event);
+                    } catch (error) {
+                        console.error('Error section upload:', error);
+                        tabContent.innerHTML = '<p>Content loading error or section unavailable.</p>';
+                    }
+                }
+            });
+        });
+
+        if (tabButtons.length > 0) {
+            tabButtons[0].click();
+        }
+    });
+</script>

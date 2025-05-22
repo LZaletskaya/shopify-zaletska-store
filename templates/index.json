@@ -1,0 +1,183 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Browse our latest products",
+            "heading_size": "h0"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop all",
+            "button_link_1": "shopify://collections/all",
+            "button_style_secondary_1": true,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "button"
+      ],
+      "disabled": true,
+      "settings": {
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-3",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "collection": "all",
+        "products_to_show": 8,
+        "title": "Featured products",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 44,
+        "padding_bottom": 36
+      }
+    },
+    "product_tab_handle_jgwxg6": {
+      "type": "product-tab-handle",
+      "blocks": {
+        "product_block_HzMpjz": {
+          "type": "product_block",
+          "settings": {
+            "product": "optimal-selection-standard-1",
+            "show_button": true,
+            "button_text": "Переглянути"
+          }
+        },
+        "product_block_W7cDQq": {
+          "type": "product_block",
+          "settings": {
+            "product": "optimal-selection-advanced-1",
+            "show_button": true,
+            "button_text": "Переглянути"
+          }
+        }
+      },
+      "block_order": [
+        "product_block_HzMpjz",
+        "product_block_W7cDQq"
+      ],
+      "disabled": true,
+      "name": "Product Tab Handle",
+      "settings": {
+        "title": "Моя динамічна секція"
+      }
+    },
+    "product_tab_picker_rJ9Mag": {
+      "type": "product-tab-picker",
+      "blocks": {
+        "product_ekp4BQ": {
+          "type": "product",
+          "settings": {
+            "product": "optimal-selection-advanced",
+            "product_desc": "Test 1 | Test 2 | Test 3"
+          }
+        },
+        "product_hipFUQ": {
+          "type": "product",
+          "settings": {
+            "product": "optimal-selection-litter-pack",
+            "product_desc": "Write product description"
+          }
+        },
+        "product_P46R33": {
+          "type": "product",
+          "settings": {
+            "product": "optimal-selection-standard",
+            "product_desc": "Write product description"
+          }
+        }
+      },
+      "block_order": [
+        "product_ekp4BQ",
+        "product_hipFUQ",
+        "product_P46R33"
+      ],
+      "name": "Dynamic Product Picker",
+      "settings": {
+        "title": "Dogs",
+        "tab_section": true
+      }
+    },
+    "product_tab_picker_Lzpbb8": {
+      "type": "product-tab-picker",
+      "blocks": {
+        "product_BPpWjp": {
+          "type": "product",
+          "settings": {
+            "product": "optimal-selection-advanced-1",
+            "product_desc": "Write product description"
+          }
+        },
+        "product_drz4R6": {
+          "type": "product",
+          "settings": {
+            "product": "optimal-selection-litter-pack-1",
+            "product_desc": "Write product description"
+          }
+        }
+      },
+      "block_order": [
+        "product_BPpWjp",
+        "product_drz4R6"
+      ],
+      "name": "Dynamic Product Picker",
+      "settings": {
+        "title": "Cats",
+        "tab_section": true
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "featured_collection",
+    "product_tab_handle_jgwxg6",
+    "product_tab_picker_rJ9Mag",
+    "product_tab_picker_Lzpbb8"
+  ]
+}

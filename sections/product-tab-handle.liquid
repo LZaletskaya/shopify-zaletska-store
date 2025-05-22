@@ -1,0 +1,338 @@
+{% comment %}
+  sections/simple-dynamic.liquid
+  Проста динамічна секція з блоками
+{% endcomment %}
+
+<section class="simple-dynamic">
+    <div class="page-width">
+        {% if section.settings.title != blank %}
+            <h2 class="section-title">{{ section.settings.title }}</h2>
+        {% endif %}
+
+        <div class="blocks-container">
+            {% for block in section.blocks %}
+                <div class="dynamic-block" {{ block.shopify_attributes }}>
+                    {% case block.type %}
+                        {% when 'text_block' %}
+                            <div class="text-block">
+                                {% if block.settings.heading != blank %}
+                                    <h3 class="block-heading">{{ block.settings.heading }}</h3>
+                                {% endif %}
+
+                                {% if block.settings.text != blank %}
+                                    <div class="block-text">{{ block.settings.text }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- НОВИЙ БЛОК ПРОДУКТУ -->
+                        {% when 'product_block' %}
+                            <div class="product-block">
+                                {% if block.settings.product != blank %}
+                                    {% assign product = all_products[block.settings.product] %}
+                                    <div class="product-card">
+                                        <a href="{{ product.url }}" class="product-link">
+                                            <div class="product-image-container">
+                                                {% if product.featured_image != blank %}
+                                                    <img
+                                                            src="{{ product.featured_image | img_url: '300x300', crop: 'center' }}"
+                                                            alt="{{ product.featured_image.alt | escape }}"
+                                                            class="product-image"
+                                                            loading="lazy"
+                                                            width="300"
+                                                            height="300"
+                                                    >
+                                                {% else %}
+                                                    <div class="product-image-placeholder">
+                                                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="product-info">
+                                                <h3 class="product-title">{{ product.title }}</h3>
+
+                                                <div class="product-price">
+                                                    {% if product.compare_at_price > product.price %}
+                                                        <span class="price--sale">
+                                                            <s class="price--original">{{ product.compare_at_price | money }}</s>
+                                                            {{ product.price | money }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="price">{{ product.price | money }}</span>
+                                                    {% endif %}
+                                                </div>
+
+                                                {% if block.settings.show_button %}
+                                                    <div class="product-button-container">
+                                                        <button class="product-button" onclick="window.location.href='{{ product.url }}'">
+                                                            {{ block.settings.button_text | default: 'Переглянути' }}
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <p>Виберіть продукт в налаштуваннях блоку</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- КІНЕЦЬ НОВОГО БЛОКУ ПРОДУКТУ -->
+                    {% endcase %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .simple-dynamic {
+        margin: 40px 0;
+    }
+
+    .page-width {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .blocks-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .dynamic-block {
+        flex: 1 1 300px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* Стилі для текстового блоку */
+    .text-block {
+        padding: 20px;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .block-heading {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    .block-text {
+        line-height: 1.5;
+    }
+
+    /* НОВІ СТИЛІ ДЛЯ БЛОКУ ПРОДУКТУ */
+    .product-block {
+        height: 100%;
+    }
+
+    .product-card {
+        height: 100%;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-link {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
+        height: 100%;
+    }
+
+    .product-image-container {
+        position: relative;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        overflow: hidden;
+    }
+
+    .product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .product-link:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .product-image-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f5f5;
+    }
+
+    .placeholder-svg {
+        width: 50%;
+        height: 50%;
+        opacity: 0.5;
+    }
+
+    .product-info {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .product-title {
+        margin: 0 0 10px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .product-price {
+        margin-bottom: 15px;
+    }
+
+    .price--sale {
+        color: #e4534d;
+    }
+
+    .price--original {
+        color: #999;
+        text-decoration: line-through;
+        margin-right: 5px;
+    }
+
+    .product-button-container {
+        margin-top: auto;
+    }
+
+    .product-button {
+        width: 100%;
+        padding: 10px 15px;
+        background-color: #4a4a4a;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .product-button:hover {
+        background-color: #333;
+    }
+
+    .product-placeholder {
+        height: 100%;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f9f9f9;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        text-align: center;
+        padding: 20px;
+    }
+    /* КІНЕЦЬ НОВИХ СТИЛІВ ДЛЯ БЛОКУ ПРОДУКТУ */
+
+    @media screen and (max-width: 749px) {
+        .dynamic-block {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Product Tab Handle",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Заголовок секції",
+      "default": "Моя динамічна секція"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "Текстовий блок",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Заголовок блоку",
+          "default": "Заголовок блоку"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Текст",
+          "default": "<p>Додайте текст вашого блоку тут.</p>"
+        }
+      ]
+    },
+    {
+      "type": "product_block",
+      "name": "Блок продукту",
+      "settings": [
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Handle продукту",
+          "info": "Введіть handle продукту (наприклад: my-product)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "Показувати кнопку",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Текст кнопки",
+          "default": "Переглянути"
+        }
+      ]
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Product Tab Handle",
+      "category": "Продукти",
+      "blocks": [
+        {
+          "type": "product_block"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
