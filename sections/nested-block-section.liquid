@@ -211,25 +211,34 @@
         if (swiper) swiper.destroy();
 
         if ((isDesktop && blockSize > 3) || (isTablet && blockSize > 2) || (isMobile && blockSize > 1)) {
-            debugger;
             new Swiper(activePanel.querySelector('.swiper'), {
-                direction: 'horizontal',
-                slidesPerView: 3,
-                spaceBetween: 0,
                 loop: true,
+                speed: 400,
+                spaceBetween: 48,
+                slidesPerView: 3,
+                slidesPerGroup: 1,
+                centeredSlides: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
                 breakpoints: {
-                    414: {
+                    0: {
                         slidesPerView: 1,
-                        spaceBetween: 0,
+                        spaceBetween: 16,
                     },
-                    576: {
+                    768: {
                         slidesPerView: 2,
-                        spaceBetween: 0,
+                        spaceBetween: 24,
                     },
-                    992: {
+                    1024: {
                         slidesPerView: 3,
-                        spaceBetween: 0,
-                    }
+                        spaceBetween: 48,
+                    },
                 }
             });
         } else {
@@ -250,7 +259,18 @@
 
     .flex {
         display: flex;
-    / / gap: 34 px;
+        gap: 48px;
+    }
+    .swiper-wrapper.flex {
+        gap: unset;
+    }
+
+    .product {
+        height: 100%;
+    }
+
+    .swiper-wrapper .product{
+        height: unset;
     }
 
     .tabs-section {
@@ -303,7 +323,7 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
-        @media all and (max-width: 414px) {
+        @media all and (max-width: 520px) {
             padding: 10px 42px;
         }
     }
@@ -369,9 +389,6 @@
         padding-bottom: 60px;
     }
 
-    .product-item {
-        padding: 0 16px;
-    }
     .product{
         box-shadow: 0 2px 8px 0 rgba(16, 16, 17, 0.06);
         padding: 40px 25px;
@@ -381,26 +398,6 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-    }
-
-    .swiper {
-        width: 100%;
-        height: 100%;
-    }
-
-    .swiper-wrapper {
-
-
-        margin: 0 -16px;
-    }
-
-    .swiper-slide {
-        height: unset;
-        width: calc(33.333% - 75px) !important;
-        @media all and (max-width: 574px) {
-            /*width: calc(100% - 51px) !important;*/
-            width: calc(100% - 0px)!important;
-        }
     }
 
     .product-badge {
