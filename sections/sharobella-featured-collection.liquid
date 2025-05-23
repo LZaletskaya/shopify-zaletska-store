@@ -1,0 +1,329 @@
+<section class="sh-featured-collection section-{{ section.id }}-padding"
+         style=""
+         data-section-id="{{ section.id }}">
+    <div class="sh-featured-collection__container">
+        <div class="sh-featured-collection_titles">
+            {% if section.settings.section_title != blank %}
+                <h2 class="sh-featured-collection__title">{{ section.settings.section_title | escape }}</h2>
+            {% endif %}
+            {% if section.settings.section_description != blank %}
+                <p class="sh-featured-collection__description">{{ section.settings.section_description | escape }}</p>
+            {% endif %}
+        </div>
+        {% if section.settings.section_collection %}
+            <featured-collection class="sh-featured-collection__slider" data-collection-id="{{ section.settings.section_collection.id }}">
+                <div class="sh-featured-collection__slider-inner swiper">
+                    <div class="swiper-wrapper">
+                        {% for product in section.settings.section_collection.products limit: section.settings.product_number %}
+                            <div class="sh-featured-collection__slide swiper-slide">
+                                <article class="product-card">
+                                    <div class="product-card__image">
+                                        {% if product.metafields.badge.top %}
+                                            <div class="product-card__badge product-card--badge-top">{{ product.metafields.badge.top }}</div>
+                                        {% endif %}
+
+                                        {% if product.featured_image %}
+                                            <img src="{{ product.featured_image | img_url: '300x' }}"
+                                                 alt="{{ product.featured_image.alt | escape }}"
+                                                 loading="lazy">
+                                        {% else %}
+                                            <img src="{{ 'product-1.png' | asset_url }}"
+                                                 alt="Placeholder image"
+                                                 loading="lazy">
+                                        {% endif %}
+                                        {% if product.metafields.badge.top %}
+                                            <div class="product-card__badge product-card--badge-bottom">{{ product.metafields.badge.bottom }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if product.tags.size > 0 %}
+                                        <p class="product-card__tag">{{ product.tags.first }}</p>
+                                    {% endif %}
+                                    {% if product.title %}
+                                        <h3 class="product-card__title">{{ product.title | escape }}</h3>
+                                    {% endif %}
+
+                                    {% if product.available %}
+                                        <div class="product-card__actions">
+                                            {% if product.price %}
+                                                <p class="product-card__price">{{ product.price | money }}</p>
+                                            {% endif %}
+                                            <add-to-cart-controller>
+                                                <div class="product-card-wrap__add-to-cart">
+                                                    <button class="product-card__add-to-cart"
+                                                            data-product-id="{{ product.id }}"
+                                                            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                                                            aria-label="Add {{ product.title }} to cart">
+                                                        <img src="{{ 'sh-icon-card.svg' | asset_url }}" alt="Sh icon cart"/>
+                                                    </button>
+                                                    <div class="product-card__quantity" style="display: none;">
+                                                        <button class="product-card__quantity-btn product-card__quantity-btn--minus">
+                                                            <img src="{{ 'sh-icon-minus.svg' | asset_url }}" alt="Sh icon minus"/>
+                                                        </button>
+                                                        <input type="number"
+                                                               class="product-card__quantity-input"
+                                                               value="1"
+                                                               min="1"
+                                                               data-product-id="{{ product.id }}"
+                                                               data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                                                        <button class="product-card__quantity-btn product-card__quantity-btn--plus">
+                                                            <img src="{{ 'sh-icon-plus.svg' | asset_url }}" alt="Sh icon plus"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </add-to-cart-controller>
+                                        </div>
+                                    {% else %}
+                                        <div class="product-card--unavailable">
+                                            <p class="product-card--unavailable-label">Sold Out</p>
+                                            <div class="product-card--unavailable-icon">
+                                                <img src="{{ 'sh-icon-notify.svg' | asset_url }}" alt="Sh icon cart"/>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-scrollbar"></div>
+                </div>
+            </featured-collection>
+            {% if section.settings.section_cta_text != blank %}
+                <div class="sh-featured-collection__cta-wrapper">
+                    <a href="{{ section.settings.section_cta_url }}" class="sh-featured-collection__cta button">
+                        <span class="sh-featured-collection__cta-inner">
+                            <span>{{ section.settings.section_cta_text | escape }}</span>
+                        </span>
+                    </a>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <p class="sh-featured-collection__empty">Please select a collection in the Theme Editor.</p>
+        {% endif %}
+    </div>
+</section>
+{% schema %}
+{
+  "name": "Sh Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Our bestsellers"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "The most popular among buyers"
+    },
+    {
+      "type": "collection",
+      "id": "section_collection",
+      "label": "Choose Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_number",
+      "min": 1,
+      "max": 25,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Top Padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Bottom Padding",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 68
+    },
+    {
+      "type": "text",
+      "id": "section_cta_text",
+      "label": "CTA Link Text",
+      "default": "View All Collection"
+    },
+    {
+      "type": "url",
+      "id": "section_cta_url",
+      "label": "CTA URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sh Featured Collection"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+    .sh-featured-collection {
+        padding-top: {{ section.settings.section_padding_top }}px;
+        padding-bottom: {{ section.settings.section_padding_bottom }}px;
+        @media all and (max-width: 520px) {
+            padding-top: {{ section.settings.section_padding_top_mobile }}px;
+            padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+        }
+    }
+</style>
+
+<script>
+    class FeaturedCollection extends HTMLElement {
+        constructor() {
+            super();
+            this.slider = null;
+            this.init();
+        }
+
+        init() {
+            this.slider = new Swiper('.sh-featured-collection__slider-inner', {
+                loop: true,
+                speed: 400,
+                spaceBetween: 0,
+                slidesPerView: 4,
+                slidesPerGroup: 1,
+                breakpoints: {
+                    0: {
+                        slidesPerView: 2,
+                        spaceBetween: 0
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 0,
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 0,
+                    },
+                },
+            });
+        }
+    }
+
+
+    class AddToCartController extends HTMLElement {
+        constructor() {
+            super();
+            this.button = this.querySelector('.product-card__add-to-cart');
+            this.quantityContainer = this.querySelector('.product-card__quantity');
+            this.quantityInput = this.querySelector('.product-card__quantity-input');
+            this.plusButton = this.querySelector('.product-card__quantity-btn--plus');
+            this.minusButton = this.querySelector('.product-card__quantity-btn--minus');
+            this.timer = null;
+            this.init();
+        }
+
+        init() {
+            this.button.addEventListener('click', this.handleAddToCartClick.bind(this));
+            this.plusButton.addEventListener('click', this.handleQuantityChange.bind(this));
+            this.minusButton.addEventListener('click', this.handleQuantityChange.bind(this));
+        }
+
+        handleAddToCartClick() {
+            this.quantityContainer.style.display = 'flex';
+            this.button.style.display = 'none';
+            this.startTimer();
+        }
+
+        handleQuantityChange(event) {
+            const isPlus = event.currentTarget.classList.contains('product-card__quantity-btn--plus');
+            let quantity = parseInt(this.quantityInput.value, 10);
+
+            if (isPlus) {
+                quantity += 1;
+            } else if (quantity > 1) {
+                quantity -= 1;
+            }
+
+            this.quantityInput.value = quantity;
+            this.startTimer();
+        }
+
+        startTimer() {
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
+
+            this.timer = setTimeout(() => {
+                const variantId = this.quantityInput.dataset.variantId;
+                const quantity = parseInt(this.quantityInput.value, 10);
+                this.addToCart(variantId, quantity);
+                this.quantityContainer.style.display = 'none';
+                this.button.style.display = 'block';
+                this.quantityInput.value = 1;
+                this.timer = null;
+            }, 3000);
+        }
+
+        async addToCart(variantId, quantity) {
+            try {
+                const response = await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        items: [{id: variantId, quantity: quantity}],
+                    }),
+                });
+
+                if (!response.ok) throw new Error('Failed to add to cart');
+
+                const cartDrawer = document.querySelector('cart-drawer');
+                if (cartDrawer) {
+                    cartDrawer.open();
+                } else {
+                    console.warn('Cart drawer element not found. Ensure <cart-drawer> exists in the DOM.');
+                }
+
+                document.dispatchEvent(new CustomEvent('cart:updated'));
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+            }
+        }
+
+        disconnectedCallback() {
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
+        }
+    }
+
+    customElements.define('featured-collection', FeaturedCollection);
+    customElements.define('add-to-cart-controller', AddToCartController);
+</script>
